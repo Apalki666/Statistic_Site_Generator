@@ -1,14 +1,20 @@
 import shutil
 import os
-from textnode import TextNode
+from markdown_utils import generate_page
 
 def main():
-    # Create a TextNode object
-    node = TextNode("This is a text node", "bold", "https://www.boot.dev")
-    
-    copy_items("static", "public")
-    # Print the object
-    print(node)
+    try:
+        print("Clearing and updating public directory...")    
+        if os.path.exists("public"):
+            shutil.rmtree("public")
+            shutil.copytree("static", "public")
+
+        print("Generating page...")
+        generate_page("content/index.md", "template.html", "public/index.html")
+
+        print("Site generation complete!")
+    except Exception as e:
+        print(f"An error occured: {e}")
 
 def copy_items(source_dir, dest_dir):
     if os.path.exists(dest_dir):
