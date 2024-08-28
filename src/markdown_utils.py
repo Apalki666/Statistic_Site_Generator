@@ -1,4 +1,5 @@
 import os
+import shutil
 from markdown_blocks import markdown_to_html_node
 
 def extract_title(markdown):
@@ -35,4 +36,21 @@ def generate_page(from_path, template_path, dest_path):
         file.write(template_content)
 
 def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
-    pass
+    entries = os.listdir(dir_path_content)
+    os.makedirs(dest_dir_path, exist_ok=True)
+    for entry in entries:
+        full_path = os.path.join(dir_path_content, entry)
+        if os.path.isfile(full_path):
+            if entry.endswith('.md') or entry.endswith('.markdown'):
+                input_file_path = full_path
+                file_name, file_extension = os.path.splitext(entry)                
+                output_file_name = file_name + '.html'
+                output_file_path = os.path.join(dest_dir_path, output_file_name)
+                generate_page(input_file_path, template_path, output_file_path)
+            else:
+                shutil.copy2(full_path, os.path.join(dest_dir_path, entry))
+        else:      
+            new_content_path = os.path.join(dir_path_content, entry)
+            new_dest_path = os.path.join(dest_dir_path, entry)
+            os.makedirs(new_dest_path, exist_ok=True)
+            generate_pages_recursive(new_content_path, template_path, new_dest_path)

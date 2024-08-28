@@ -1,6 +1,6 @@
 import shutil
 import os
-from markdown_utils import generate_page
+from markdown_utils import generate_page, generate_pages_recursive
 
 def main():
     try:
@@ -10,12 +10,13 @@ def main():
             shutil.copytree("static", "public")
 
         print("Generating page...")
-        generate_page("content/index.md", "template.html", "public/index.html")
+        #generate_page("content/index.md", "template.html", "public/index.html")
+        generate_pages_recursive("content/", "template.html", "public/")
 
         print("Site generation complete!")
     except Exception as e:
-        print(f"An error occured: {e}")
-
+        print(f"An error occurred: {e}")
+"""
 def copy_items(source_dir, dest_dir):
     if os.path.exists(dest_dir):
         shutil.rmtree(dest_dir)
@@ -30,5 +31,6 @@ def copy_items(source_dir, dest_dir):
         else:
             copy_items(s,d)
             print (f" Copied directory: {s} to {d}")
+"""
 # Don't forget to call main() at the end of the file
 main()
